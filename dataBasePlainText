@@ -1,0 +1,35 @@
+CREATE TABLE stats(
+id INTEGER PRIMARY KEY,
+player TEXT NOT NULL,
+points INTEGER NOT NULL,
+assists INTEGER NOT NULL,
+rebounds INTEGER NOT NULL
+);
+
+stats
+
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Kareem Abdul-Jabbar',	38387,	5660,	17440);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('LeBron James*',	34241,	9346,	9405);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Karl Malone',	36928,	5248,	14968);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Kobe Bryant',	33643,	6306,	7047);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Michael Jordan',	32292,	5633,	6672);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Dirk Nowitzki',	31560,	3651,	11489);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Wilt Chamberlain',	31419,	4643,	23924);
+INSERT INTO stats(player,points,assists,rebounds) VALUES("Shaquille O'Neal",	28596,	3026,	13099);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Moses Malone',	27409, 1796, 16212);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Elvin Hayes', 27313,	2398,	16279);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Bill Russell',	14522,	4100,	21620);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Gary Payton', 11199,	8966,	1593);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Maurice Cheeks',	12195, 7392, 3088);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Tim Duncan',	26496, 4225,	15091);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Robert Parish', 23334,	2180,	14715);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Kevin Garnett', 26071,	5445,	14662);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Nate Thurmond', 14437,	2575,	14464);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('John Stockton', 19711,	15806, 4051);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Jason Kidd',	17529,	12091, 8725);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Steve Nash',	17387,	10335, 3642);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Mark Jackson', 12489,	10334, 4963);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Magic Johnson', 17707,	10141, 6559);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Oscar Robertson', 26710,	9887,	7804);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Chris Paul*', 18829,	9653,	4611);
+INSERT INTO stats(player,points,assists,rebounds) VALUES('Isaiah Thomas', 18822,	9061,	1288);
