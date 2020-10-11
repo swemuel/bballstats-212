@@ -21,7 +21,7 @@
 
     <canvas id="myCanvas"></canvas>
     <script>
-      var xpos = -280;
+      var xpos = 280;
 
 
 
@@ -105,22 +105,23 @@
       .then(response => response.json())
       .then(data => {
         for (i = 0; i < data.length; i++){
-          ypos = data[i][2]/1000;
+          ypos = data[i][2]/60-420;
 
           var ball = new THREE.SphereGeometry(10, 32, 32);
           var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
           var ballMesh = new THREE.Mesh(ball, ballMaterial);
 
-          ballMesh.position.set(xpos + i*60.5, ypos, 0);
+          ballMesh.position.set(xpos - i*60.5, ypos, 0);
           scene.add(ballMesh);
           console.log(ypos);
          }
+         renderer.render(scene, camera);
         });
 
 
 
 
-       renderer.render(scene, camera);
+
 
 
     </script>
