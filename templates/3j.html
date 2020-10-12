@@ -20,138 +20,153 @@
   <body>
 
     <canvas id="myCanvas"></canvas>
+
     <script>
-      var xpos = 280;
+       var xpos = 280;
+       var mouse = new THREE.Vector2(), INTERSECTED;
 
 
-
-    //create renderer
-      var renderer = new THREE.WebGLRenderer({canvas: document.getElementById('myCanvas'), antialias: true});
-      renderer.setClearColor(0x282222);
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(window.innerWidth, window.innerHeight);
-
-      // create camera
-      var camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 3000);
-      camera.position.z = 1000;
-      camera.position.y = 165;
-      //create scene
-      var scene = new THREE.Scene();
-
-      //lights
-
-      var spotLight1 = new THREE.SpotLight(0xFFCCC2, 1);
-      spotLight1.penumbra = 1.0;
-      spotLight1.position.set(-200, 480, 0);
-      scene.add(spotLight1);
-
-      var spotLight2 = new THREE.SpotLight(0xFFCCC2, 1);
-      spotLight2.penumbra = 1.0;
-      spotLight2.position.set(200, 480, 0);
-      scene.add(spotLight2);
+       var camera, scene, raycaster, renderer;
 
 
-      // 3D assets
+       fetch('/stats/rebounds', { method: 'GET'})
+         .then(response => response.json())
+         .then(data => {
+           init(data);
+           draw();
 
-      var ground = new THREE.BoxGeometry(800, 10, 400);
-      var groundMaterial = new THREE.MeshStandardMaterial({
-      color: 0xC1B446,
-      roughness: 0.5,
-      metalness: 0.9,
-      });
+            //renderer.render(scene, camera);
+           });
 
-      var groundMesh = new THREE.Mesh(ground, groundMaterial);
+       function init(data) {
+         console.log(data)
 
-      var pole = new THREE.BoxGeometry(5, 180, 5);
-      var poleMaterial = new THREE.MeshLambertMaterial({color: 0xF3FFE2});
-      var poleMesh = new THREE.Mesh(pole, poleMaterial);
-      poleMesh.position.set(380, 90, 0);
+         renderer = new THREE.WebGLRenderer({canvas: document.getElementById('myCanvas'), antialias: true});
+         renderer.setClearColor(0x282222);
+         renderer.setPixelRatio(window.devicePixelRatio);
+         renderer.setSize(window.innerWidth, window.innerHeight);
 
-      var poleMesh1 = new THREE.Mesh(pole, poleMaterial);
-      poleMesh1.position.set(-380, 90, 0);
+         // create camera
+         camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 3000);
+         camera.position.z = 1000;
+         camera.position.y = 165;
+         //create scene
+         scene = new THREE.Scene();
 
-      var backboard = new THREE.BoxGeometry(2, 50, 90);
-      var backMaterial = new THREE.MeshLambertMaterial({color: 0xF3FFE2});
-      var backMesh = new THREE.Mesh(backboard, backMaterial);
-      backMesh.position.set(-377.5, 160, 0);
+         //lights
 
-      var backMesh1 = new THREE.Mesh(backboard, backMaterial);
-      backMesh1.position.set(377.5, 160, 0);
+         var spotLight1 = new THREE.SpotLight(0xFFCCC2, 1);
+         spotLight1.penumbra = 1.0;
+         spotLight1.position.set(-200, 480, 0);
+         scene.add(spotLight1);
 
-      var hoop = new THREE.TorusGeometry(10, 1, 20, 80);
-      var hoopMaterial = new THREE.MeshLambertMaterial({color: 0xF3FFE2});
-      var hoopMesh = new THREE.Mesh(hoop, hoopMaterial);
-      hoopMesh.position.set(-368, 145, 0);
-      hoopMesh.rotation.set(7.9, 0, 0);
-
-      var hoopMesh1 = new THREE.Mesh(hoop, hoopMaterial);
-      hoopMesh1.position.set(368, 145, 0);
-      hoopMesh1.rotation.set(7.9, 0, 0);
-
-      scene.add(groundMesh);
-      scene.add(poleMesh);
-      scene.add(poleMesh1);
-      scene.add(backMesh);
-      scene.add(backMesh1);
-      scene.add(hoopMesh);
-      scene.add(hoopMesh1);
+         var spotLight2 = new THREE.SpotLight(0xFFCCC2, 1);
+         spotLight2.penumbra = 1.0;
+         spotLight2.position.set(200, 480, 0);
+         scene.add(spotLight2);
 
 
+         // 3D assets
 
-      // balls
+         var ground = new THREE.BoxGeometry(800, 10, 400);
+         var groundMaterial = new THREE.MeshStandardMaterial({
+         color: 0xC1B446,
+         roughness: 0.5,
+         metalness: 0.9,
+         });
 
- /*
-      fetch('/stats/points', { method: 'GET'})
-      .then(response => response.json())
-      .then(data => {
-        for (i = 0; i < data.length; i++){
-          ypos = data[i][2]/60-420;
+         var groundMesh = new THREE.Mesh(ground, groundMaterial);
 
-          var ball = new THREE.SphereGeometry(10, 32, 32);
-          var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-          var ballMesh = new THREE.Mesh(ball, ballMaterial);
+         var pole = new THREE.BoxGeometry(5, 180, 5);
+         var poleMaterial = new THREE.MeshLambertMaterial({color: 0xF3FFE2});
+         var poleMesh = new THREE.Mesh(pole, poleMaterial);
+         poleMesh.position.set(380, 90, 0);
 
-          ballMesh.position.set(xpos - i*60.5, ypos, 0);
-          scene.add(ballMesh);
-          console.log(ypos);
-         }
-         renderer.render(scene, camera);
-        });
-  */
+         var poleMesh1 = new THREE.Mesh(pole, poleMaterial);
+         poleMesh1.position.set(-380, 90, 0);
 
-        // fetch('/stats/assists', { method: 'GET'})
-        // .then(response => response.json())
-        // .then(data => {
-        //   for (i = 0; i < data.length; i++){
-        //     ypos = data[i][3]/60-80;
-        //
-        //     var ball = new THREE.SphereGeometry(10, 32, 32);
-        //     var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-        //     var ballMesh = new THREE.Mesh(ball, ballMaterial);
-        //
-        //     ballMesh.position.set(xpos - i*60.5, ypos, 0);
-        //     scene.add(ballMesh);
-        //     console.log(ypos);
-        //    }
-        //    renderer.render(scene, camera);
-        //   });
+         var backboard = new THREE.BoxGeometry(2, 50, 90);
+         var backMaterial = new THREE.MeshLambertMaterial({color: 0xF3FFE2});
+         var backMesh = new THREE.Mesh(backboard, backMaterial);
+         backMesh.position.set(-377.5, 160, 0);
 
-          fetch('/stats/rebounds', { method: 'GET'})
-          .then(response => response.json())
-          .then(data => {
-            for (i = 0; i < data.length; i++){
-              ypos = data[i][4]/60-180;
+         var backMesh1 = new THREE.Mesh(backboard, backMaterial);
+         backMesh1.position.set(377.5, 160, 0);
 
-              var ball = new THREE.SphereGeometry(10, 32, 32);
-              var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-              var ballMesh = new THREE.Mesh(ball, ballMaterial);
+         var hoop = new THREE.TorusGeometry(10, 1, 20, 80);
+         var hoopMaterial = new THREE.MeshLambertMaterial({color: 0xF3FFE2});
+         var hoopMesh = new THREE.Mesh(hoop, hoopMaterial);
+         hoopMesh.position.set(-368, 145, 0);
+         hoopMesh.rotation.set(7.9, 0, 0);
 
-              ballMesh.position.set(xpos - i*60.5, ypos, 0);
-              scene.add(ballMesh);
-              console.log(ypos);
-             }
-             renderer.render(scene, camera);
-            });
+         var hoopMesh1 = new THREE.Mesh(hoop, hoopMaterial);
+         hoopMesh1.position.set(368, 145, 0);
+         hoopMesh1.rotation.set(7.9, 0, 0);
+
+         scene.add(groundMesh);
+         scene.add(poleMesh);
+         scene.add(poleMesh1);
+         scene.add(backMesh);
+         scene.add(backMesh1);
+         scene.add(hoopMesh);
+         scene.add(hoopMesh1);
+
+         for (i = 0; i < data.length; i++){
+           ypos = data[i][4]/60-180;
+
+           var ball = new THREE.SphereGeometry(10, 32, 32);
+           var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+           var ballMesh = new THREE.Mesh(ball, ballMaterial);
+
+           ballMesh.position.set(xpos - i*60.5, ypos, 0);
+           scene.add(ballMesh);
+
+          }
+
+          raycaster = new THREE.Raycaster();
+         //renderer.render(scene, camera);
+       }
+
+
+        // balls
+
+   /*
+        fetch('/stats/points', { method: 'GET'})
+        .then(response => response.json())
+        .then(data => {
+          for (i = 0; i < data.length; i++){
+            ypos = data[i][2]/60-420;
+
+            var ball = new THREE.SphereGeometry(10, 32, 32);
+            var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+            var ballMesh = new THREE.Mesh(ball, ballMaterial);
+
+            ballMesh.position.set(xpos - i*60.5, ypos, 0);
+            scene.add(ballMesh);
+            console.log(ypos);
+           }
+           renderer.render(scene, camera);
+          });
+    */
+
+          // fetch('/stats/assists', { method: 'GET'})
+          // .then(response => response.json())
+          // .then(data => {
+          //   for (i = 0; i < data.length; i++){
+          //     ypos = data[i][3]/60-80;
+          //
+          //     var ball = new THREE.SphereGeometry(10, 32, 32);
+          //     var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+          //     var ballMesh = new THREE.Mesh(ball, ballMaterial);
+          //
+          //     ballMesh.position.set(xpos - i*60.5, ypos, 0);
+          //     scene.add(ballMesh);
+          //     console.log(ypos);
+          //    }
+          //    renderer.render(scene, camera);
+          //   });
+
+
 
       function onWindowResize() {
 
@@ -161,50 +176,53 @@
   			renderer.setSize( window.innerWidth, window.innerHeight );
       }
 
-      var raycaster = new THREE.Raycaster();
-      var mouse = new THREE.Vector2(), INTERSECTED;
-
       function onMouseMove( event ) {
 
       	// calculate mouse position in normalized device coordinates
       	// (-1 to +1) for both components
         event.preventDefault();
+
       	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
       	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
       }
 
-      function render() {
+      // run the animation
+      function draw() {
+        requestAnimationFrame(draw);
+        raycaster.setFromCamera( mouse, camera );
 
-      	// update the picking ray with the camera and mouse position
-      	raycaster.setFromCamera( mouse, camera );
-
-      	// calculate objects intersecting the picking ray
-      	var intersects = raycaster.intersectObjects( scene.children );
+        // calculate objects intersecting the picking ray
+        var intersects = raycaster.intersectObjects( scene.children );
+//console.log(scene.children);
 
 
-				if ( intersects.length > 0 ) {
+        console.log(intersects[0])
 
-					if ( INTERSECTED != intersects[ 0 ].ballMesh ) {
 
-						if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+        renderer.render(scene, camera);
 
-						INTERSECTED = intersects[ 0 ].ballMesh;
-						INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-						INTERSECTED.material.emissive.setHex( 0xff0000 );
 
-					}
+/*
+          if ( INTERSECTED != intersects[ 0 ].object ) {
 
-				}
+
+            if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+
+              INTERSECTED = intersects[ 0 ].object;
+              INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+              INTERSECTED.material.emissive.setHex( 0xffffff );
+          }
+
+        }
         else {
 
-					if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+          if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
 
-					INTERSECTED = null;
+          INTERSECTED = null;
         }
-
-      	renderer.render( scene, camera );
-
+*/
+        //renderer.render(scene, camera);
       }
 
 
@@ -216,5 +234,13 @@
 
 
     </script>
+
+    <svg style="position:absolute; width:100%; height: 100%; left:0; top:0" viewBox="0 0 800 600">
+      <rect x="0" y="0" width="100" height="100" fill="red" />
+
+    </svg>
+
+
+
   </body>
 </html>
