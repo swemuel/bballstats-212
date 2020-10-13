@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r120/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
     <title>Stats-212</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <style>
@@ -19,27 +20,148 @@
   </head>
   <body>
 
+    <svg style="position:absolute; width:100%; height: 100%; left:0; top:0" viewBox="0 0 800 600">
+      <style>
+        #points, #assists, #rebounds {
+          font: 30px sans-serif;
+          cursor: pointer;
+        }
+        .rect{
+          cursor: pointer;
+        }
+      </style>
+
+      <linearGradient id="naran">
+        <stop offset="0%"   style="stop-color:#830" />
+        <stop offset="25%"  style="stop-color:#C70" />
+        <stop offset="50%"  style="stop-color:#F90" />
+        <stop offset="75%"  style="stop-color:#C70" />
+        <stop offset="100%" style="stop-color:#A50" />
+      </linearGradient>
+
+      <rect x="80" y="15" width="200" height="80" fill="url(#naran)" fill-opacity="40" stroke="#111" rx="15" id="points"/>
+      <text x="100" y="65" textLength="160" id=points fill="#222"> Points </text>
+      <rect x="303" y="15" width="200" height="80" fill="url(#naran)" fill-opacity="40" stroke="#111" rx="15" id="assists"/>
+      <text x="320" y="65" textLength="160" id=assists fill="#222"> Assists </text>
+      <rect x="526" y="15" width="200" height="80" fill="url(#naran)" fill-opacity="40" stroke="#111" rx="15" id="rebounds"/>
+      <text x="540" y="65" textLength="160" id=rebounds fill="#222"> Rebounds </text>
+
+     <g class="rect">
+      <rect x="125" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect0"/>
+      <rect x="185" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect1"/>
+      <rect x="245" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect2"/>
+      <rect x="305" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect3"/>
+      <rect x="360" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect4"/>
+      <rect x="420" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect5"/>
+      <rect x="475" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect6"/>
+      <rect x="535" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect7"/>
+      <rect x="590" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect8"/>
+      <rect x="650" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect9"/>
+     </g>
+    </svg>
+
+
     <canvas id="myCanvas"></canvas>
 
     <script>
        var xpos = 280;
-       var mouse = new THREE.Vector2(), INTERSECTED;
+       var camera, scene, renderer;
+
+       init();
+       document.getElementById('points').addEventListener('click', function pointStats(){
+         console.log("points");
+         pointBalls = true;
+
+         fetch('/stats/points', { method: 'GET'})
+           .then(response => response.json())
+           .then(data => {
+
+             disp(data);
+
+             for (i = 0; i < data.length; i++){
+               ypos = data[i][2]/60-420;
+
+               var ball = new THREE.SphereGeometry(10, 32, 32);
+               var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+               var pointBall = new THREE.Mesh(ball, ballMaterial);
+
+               pointBall.position.set(xpos - i*60.5, ypos, 0);
+               scene.add(pointBall);
+              // console.log(ypos);
+              }
+
+             renderer.render(scene, camera);
+             });
+
+       });
+
+       document.getElementById('assists').addEventListener('click', function assistStats(){
+         console.log("assists");
+         assistBalls = true;
+
+         fetch('/stats/assists', { method: 'GET'})
+           .then(response => response.json())
+           .then(data => {
+
+             disp(data);
+
+             for (i = 0; i < data.length; i++){
+               ypos = data[i][3]/60-80;
+
+               var ball = new THREE.SphereGeometry(10, 32, 32);
+               var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+               var assistBall = new THREE.Mesh(ball, ballMaterial);
+
+               assistBall.position.set(xpos - i*60.5, ypos, 0);
+               scene.add(assistBall);
+               //console.log(ypos);
+              }
+
+             renderer.render(scene, camera);
+             });
+
+       });
+
+       document.getElementById('rebounds').addEventListener('click', function reboundStats(){
+         console.log("rebounds");
+         assistBalls = true;
+
+         fetch('/stats/rebounds', { method: 'GET'})
+           .then(response => response.json())
+           .then(data => {
+
+             disp(data);
+
+             for (i = 0; i < data.length; i++){
+               ypos = data[i][4]/60-180;
+
+               var ball = new THREE.SphereGeometry(10, 32, 32);
+               var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+               var reboundBall = new THREE.Mesh(ball, ballMaterial);
+
+               reboundBall.position.set(xpos - i*60.5, ypos, 0);
+               scene.add(reboundBall);
+               //console.log(ypos);
+              }
+
+             renderer.render(scene, camera);
+             });
+
+       });
+       // fetch('/stats/rebounds', { method: 'GET'})
+       //   .then(response => response.json())
+       //   .then(data => {
+       //     init(data);
+       //     disp(data);
+       //
+       //
+       //
+       //     renderer.render(scene, camera);
+       //     });
 
 
-       var camera, scene, raycaster, renderer;
-
-
-       fetch('/stats/rebounds', { method: 'GET'})
-         .then(response => response.json())
-         .then(data => {
-           init(data);
-           draw();
-
-            //renderer.render(scene, camera);
-           });
-
-       function init(data) {
-         console.log(data)
+       function init() {
+         console.log()
 
          renderer = new THREE.WebGLRenderer({canvas: document.getElementById('myCanvas'), antialias: true});
          renderer.setClearColor(0x282222);
@@ -111,19 +233,23 @@
          scene.add(hoopMesh);
          scene.add(hoopMesh1);
 
-         for (i = 0; i < data.length; i++){
-           ypos = data[i][4]/60-180;
+         for (i = 0; i < 10; i++){
+           ypos = 50 //data[i][4]/60-180;
 
            var ball = new THREE.SphereGeometry(10, 32, 32);
            var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
            var ballMesh = new THREE.Mesh(ball, ballMaterial);
 
+
            ballMesh.position.set(xpos - i*60.5, ypos, 0);
            scene.add(ballMesh);
 
+           renderer.render(scene, camera);
+
+
           }
 
-          raycaster = new THREE.Raycaster();
+
          //renderer.render(scene, camera);
        }
 
@@ -166,8 +292,6 @@
           //    renderer.render(scene, camera);
           //   });
 
-
-
       function onWindowResize() {
 
   			camera.aspect = window.innerWidth / window.innerHeight;
@@ -176,71 +300,64 @@
   			renderer.setSize( window.innerWidth, window.innerHeight );
       }
 
-      function onMouseMove( event ) {
-
-      	// calculate mouse position in normalized device coordinates
-      	// (-1 to +1) for both components
-        event.preventDefault();
-
-      	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-      	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-      }
-
-      // run the animation
-      function draw() {
-        requestAnimationFrame(draw);
-        raycaster.setFromCamera( mouse, camera );
-
-        // calculate objects intersecting the picking ray
-        var intersects = raycaster.intersectObjects( scene.children );
-//console.log(scene.children);
-
-
-        console.log(intersects[0])
-
-
-        renderer.render(scene, camera);
-
-
-/*
-          if ( INTERSECTED != intersects[ 0 ].object ) {
-
-
-            if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-
-              INTERSECTED = intersects[ 0 ].object;
-              INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-              INTERSECTED.material.emissive.setHex( 0xffffff );
-          }
-
+      function disp(data){
+      document.getElementById('rect9').addEventListener('mouseover', function rec(){
+        for (i = 0; i < data.length; i++){
+          console.log(data[0]);
         }
-        else {
-
-          if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-
-          INTERSECTED = null;
+      });
+      document.getElementById('rect8').addEventListener('mouseover', function rec(){
+        for (i = 0; i < data.length; i++){
+          console.log(data[1]);
         }
-*/
-        //renderer.render(scene, camera);
-      }
-
-
-
-
-
-
-
-
+      });
+      document.getElementById('rect7').addEventListener('mouseover', function rec(){
+        for (i = 0; i < data.length; i++){
+          console.log(data[2]);
+        }
+      });
+      document.getElementById('rect6').addEventListener('mouseover', function rec(){
+        for (i = 0; i < data.length; i++){
+          console.log(data[3]);
+        }
+      });
+      document.getElementById('rect5').addEventListener('mouseover', function rec(){
+        for (i = 0; i < data.length; i++){
+          console.log(data[4]);
+        }
+      });
+      document.getElementById('rect4').addEventListener('mouseover', function rec(){
+        for (i = 0; i < data.length; i++){
+          console.log(data[5]);
+        }
+      });
+      document.getElementById('rect3').addEventListener('mouseover', function rec(){
+        for (i = 0; i < data.length; i++){
+          console.log(data[6]);
+        }
+      });
+      document.getElementById('rect2').addEventListener('mouseover', function rec(){
+        for (i = 0; i < data.length; i++){
+          console.log(data[7]);
+        }
+      });
+      document.getElementById('rect1').addEventListener('mouseover', function rec(){
+        for (i = 0; i < data.length; i++){
+          console.log(data[8]);
+        }
+      });
+      document.getElementById('rect0').addEventListener('mouseover', function rec(){
+        for (i = 0; i < data.length; i++){
+          console.log(data[9]);
+        }
+      });
+    }
 
     </script>
 
-    <svg style="position:absolute; width:100%; height: 100%; left:0; top:0" viewBox="0 0 800 600">
-      <rect x="0" y="0" width="100" height="100" fill="red" />
+    <script>
 
-    </svg>
-
-
+    </script>
 
   </body>
 </html>
