@@ -64,31 +64,27 @@
     <canvas id="myCanvas"></canvas>
 
     <script>
-       var xpos = 280;
+       var xpos = 280; //ball x position
+       var y = 50; //ball y position
        var camera, scene, renderer;
 
        init();
        document.getElementById('points').addEventListener('click', function pointStats(){
          console.log("points");
-         pointBalls = true;
+         y = 0;
+
+         console.log(y);
+
+
+
 
          fetch('/stats/points', { method: 'GET'})
            .then(response => response.json())
            .then(data => {
 
+             //init();
+             balls(data);
              disp(data);
-
-             for (i = 0; i < data.length; i++){
-               ypos = data[i][2]/60-420;
-
-               var ball = new THREE.SphereGeometry(10, 32, 32);
-               var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-               var pointBall = new THREE.Mesh(ball, ballMaterial);
-
-               pointBall.position.set(xpos - i*60.5, ypos, 0);
-               scene.add(pointBall);
-              // console.log(ypos);
-              }
 
              renderer.render(scene, camera);
              });
@@ -97,25 +93,12 @@
 
        document.getElementById('assists').addEventListener('click', function assistStats(){
          console.log("assists");
-         assistBalls = true;
 
          fetch('/stats/assists', { method: 'GET'})
            .then(response => response.json())
            .then(data => {
 
              disp(data);
-
-             for (i = 0; i < data.length; i++){
-               ypos = data[i][3]/60-80;
-
-               var ball = new THREE.SphereGeometry(10, 32, 32);
-               var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-               var assistBall = new THREE.Mesh(ball, ballMaterial);
-
-               assistBall.position.set(xpos - i*60.5, ypos, 0);
-               scene.add(assistBall);
-               //console.log(ypos);
-              }
 
              renderer.render(scene, camera);
              });
@@ -124,30 +107,60 @@
 
        document.getElementById('rebounds').addEventListener('click', function reboundStats(){
          console.log("rebounds");
-         assistBalls = true;
 
          fetch('/stats/rebounds', { method: 'GET'})
            .then(response => response.json())
            .then(data => {
 
+
              disp(data);
 
-             for (i = 0; i < data.length; i++){
-               ypos = data[i][4]/60-180;
 
-               var ball = new THREE.SphereGeometry(10, 32, 32);
-               var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-               var reboundBall = new THREE.Mesh(ball, ballMaterial);
-
-               reboundBall.position.set(xpos - i*60.5, ypos, 0);
-               scene.add(reboundBall);
-               //console.log(ypos);
-              }
 
              renderer.render(scene, camera);
              });
 
        });
+
+
+       // for (i = 0; i < data.length; i++){
+       //   ypos = data[i][2]/60-420;
+       //
+       //   var ball = new THREE.SphereGeometry(10, 32, 32);
+       //   var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+       //   var pointBall = new THREE.Mesh(ball, ballMaterial);
+       //
+       //   pointBall.position.set(xpos - i*60.5, ypos, 0);
+       //   scene.add(pointBall);
+       //
+       //  }
+
+
+       // for (i = 0; i < data.length; i++){
+       //   ypos = data[i][3]/60-80;
+       //
+       //   var ball = new THREE.SphereGeometry(10, 32, 32);
+       //   var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+       //   var assistBall = new THREE.Mesh(ball, ballMaterial);
+       //
+       //   assistBall.position.set(xpos - i*60.5, ypos, 0);
+       //   scene.add(assistBall);
+       //  }
+
+
+       // for (i = 0; i < data.length; i++){
+       //   ypos = data[i][4]/60-180;
+       //
+       //   var ball = new THREE.SphereGeometry(10, 32, 32);
+       //   var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+       //   var reboundBall = new THREE.Mesh(ball, ballMaterial);
+       //
+       //   reboundBall.position.set(xpos - i*60.5, ypos, 0);
+       //   scene.add(reboundBall);
+       //  }
+
+
+
        // fetch('/stats/rebounds', { method: 'GET'})
        //   .then(response => response.json())
        //   .then(data => {
@@ -233,25 +246,38 @@
          scene.add(hoopMesh);
          scene.add(hoopMesh1);
 
-         for (i = 0; i < 10; i++){
-           ypos = 50 //data[i][4]/60-180;
-
-           var ball = new THREE.SphereGeometry(10, 32, 32);
-           var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-           var ballMesh = new THREE.Mesh(ball, ballMaterial);
+         ypos = 50;
+         balls();
 
 
-           ballMesh.position.set(xpos - i*60.5, ypos, 0);
-           scene.add(ballMesh);
 
-           renderer.render(scene, camera);
+         renderer.render(scene, camera);
+       }
+
+     function balls(data){
+       for (i = 0; i < 10; i++){
+
+        //if points button clicked 
+        if (y == 0){
+          ypos = data[i][2]/60-420;
+      }
+        else if(y == 50){
+          ypos = 50;
+        }
+
+         var ball = new THREE.SphereGeometry(10, 32, 32);
+         var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+         var ballMesh = new THREE.Mesh(ball, ballMaterial);
 
 
-          }
-
+         ballMesh.position.set(xpos - i*60.5, ypos, 0);
+         scene.add(ballMesh);
 
          //renderer.render(scene, camera);
-       }
+
+
+        }
+     }
 
 
         // balls
