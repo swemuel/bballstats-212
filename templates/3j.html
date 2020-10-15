@@ -26,6 +26,10 @@
           font: 30px sans-serif;
           cursor: pointer;
         }
+        #pointtext, #playertext{
+          font: 30px sans-serif;
+          fill: #F95;
+        }
         .rect{
           cursor: pointer;
         }
@@ -47,17 +51,21 @@
       <text x="540" y="65" textLength="160" id=rebounds fill="#222"> Rebounds </text>
 
      <g class="rect">
-      <rect x="125" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect0"/>
-      <rect x="185" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect1"/>
-      <rect x="245" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect2"/>
-      <rect x="305" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect3"/>
-      <rect x="360" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect4"/>
-      <rect x="420" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect5"/>
-      <rect x="475" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect6"/>
-      <rect x="535" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect7"/>
-      <rect x="590" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect8"/>
-      <rect x="650" y="180" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect9"/>
+      <rect x="125" y="200" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect0"/>
+      <rect x="185" y="200" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect1"/>
+      <rect x="245" y="200" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect2"/>
+      <rect x="305" y="200" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect3"/>
+      <rect x="360" y="200" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect4"/>
+      <rect x="420" y="200" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect5"/>
+      <rect x="475" y="200" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect6"/>
+      <rect x="535" y="200" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect7"/>
+      <rect x="590" y="200" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect8"/>
+      <rect x="650" y="200" width="40" height="250" fill="#333" fill-opacity="0" stroke="#999" id="rect9"/>
      </g>
+
+     <text x="220" y="160" textLength="180" id=playertext lengthAdjust="spacingAndGlyphs">  </text>
+     <text x="440" y="160" textLength="120" id=pointtext>  </text>
+
     </svg>
 
 
@@ -65,113 +73,19 @@
 
     <script>
        var xpos = 280; //ball x position
-       var y = 50; //ball y position
        var camera, scene, renderer;
 
-       init();
-       document.getElementById('points').addEventListener('click', function pointStats(){
-         console.log("points");
-         y = 0;
-
-         console.log(y);
+       let balls = [];
 
 
-
-
-         fetch('/stats/points', { method: 'GET'})
-           .then(response => response.json())
-           .then(data => {
-
-             //init();
-             balls(data);
-             disp(data);
-
-             renderer.render(scene, camera);
-             });
-
-       });
-
-       document.getElementById('assists').addEventListener('click', function assistStats(){
-         console.log("assists");
-
-         fetch('/stats/assists', { method: 'GET'})
-           .then(response => response.json())
-           .then(data => {
-
-             disp(data);
-
-             renderer.render(scene, camera);
-             });
-
-       });
-
-       document.getElementById('rebounds').addEventListener('click', function reboundStats(){
-         console.log("rebounds");
-
-         fetch('/stats/rebounds', { method: 'GET'})
-           .then(response => response.json())
-           .then(data => {
-
-
-             disp(data);
-
-
-
-             renderer.render(scene, camera);
-             });
-
-       });
-
-
-       // for (i = 0; i < data.length; i++){
+       //   ypos points
        //   ypos = data[i][2]/60-420;
-       //
-       //   var ball = new THREE.SphereGeometry(10, 32, 32);
-       //   var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-       //   var pointBall = new THREE.Mesh(ball, ballMaterial);
-       //
-       //   pointBall.position.set(xpos - i*60.5, ypos, 0);
-       //   scene.add(pointBall);
-       //
-       //  }
 
-
-       // for (i = 0; i < data.length; i++){
+       // ypos for assists
        //   ypos = data[i][3]/60-80;
-       //
-       //   var ball = new THREE.SphereGeometry(10, 32, 32);
-       //   var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-       //   var assistBall = new THREE.Mesh(ball, ballMaterial);
-       //
-       //   assistBall.position.set(xpos - i*60.5, ypos, 0);
-       //   scene.add(assistBall);
-       //  }
 
-
-       // for (i = 0; i < data.length; i++){
+       //   ypos for rebounds
        //   ypos = data[i][4]/60-180;
-       //
-       //   var ball = new THREE.SphereGeometry(10, 32, 32);
-       //   var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-       //   var reboundBall = new THREE.Mesh(ball, ballMaterial);
-       //
-       //   reboundBall.position.set(xpos - i*60.5, ypos, 0);
-       //   scene.add(reboundBall);
-       //  }
-
-
-
-       // fetch('/stats/rebounds', { method: 'GET'})
-       //   .then(response => response.json())
-       //   .then(data => {
-       //     init(data);
-       //     disp(data);
-       //
-       //
-       //
-       //     renderer.render(scene, camera);
-       //     });
-
 
        function init() {
          console.log()
@@ -180,11 +94,12 @@
          renderer.setClearColor(0x282222);
          renderer.setPixelRatio(window.devicePixelRatio);
          renderer.setSize(window.innerWidth, window.innerHeight);
+         document.body.appendChild(renderer.domElement);
 
          // create camera
          camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 3000);
          camera.position.z = 1000;
-         camera.position.y = 165;
+         camera.position.y = 185;
          //create scene
          scene = new THREE.Scene();
 
@@ -246,77 +161,168 @@
          scene.add(hoopMesh);
          scene.add(hoopMesh1);
 
-         ypos = 50;
-         balls();
 
 
 
-         renderer.render(scene, camera);
+
+         let ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+         balls[0] = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), ballMaterial);
+         balls[0].position.x = 280;
+         balls[0].position.y = 50;
+
+         ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+         balls[1] = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), ballMaterial);
+         balls[1].position.x = 219.5;
+         balls[1].position.y = 50;
+
+         ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+         balls[2] = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), ballMaterial);
+         balls[2].position.x = 159;
+         balls[2].position.y = 50;
+
+         ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+         balls[3] = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), ballMaterial);
+         balls[3].position.x = 98.5;
+         balls[3].position.y = 50;
+
+         ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+         balls[4] = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), ballMaterial);
+         balls[4].position.x = 38;
+         balls[4].position.y = 50;
+
+         ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+         balls[5] = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), ballMaterial);
+         balls[5].position.x = -23.5;
+         balls[5].position.y = 50;
+
+         ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+         balls[6] = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), ballMaterial);
+         balls[6].position.x = -84;
+         balls[6].position.y = 50;
+
+         ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+         balls[7] = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), ballMaterial);
+         balls[7].position.x = -144.5;
+         balls[7].position.y = 50;
+
+         ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+         balls[8] = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), ballMaterial);
+         balls[8].position.x = -205;
+         balls[8].position.y = 50;
+
+         ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
+         balls[9] = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 32), ballMaterial);
+         balls[9].position.x = -265.5;
+         balls[9].position.y = 50;
+
+         scene.add(balls[0]);
+         scene.add(balls[1]);
+         scene.add(balls[2]);
+         scene.add(balls[3]);
+         scene.add(balls[4]);
+         scene.add(balls[5]);
+         scene.add(balls[6]);
+         scene.add(balls[7]);
+         scene.add(balls[8]);
+         scene.add(balls[9]);
+
+
+
        }
 
-     function balls(data){
-       for (i = 0; i < 10; i++){
-
-        //if points button clicked 
-        if (y == 0){
-          ypos = data[i][2]/60-420;
-      }
-        else if(y == 50){
-          ypos = 50;
+       // run the animation
+       function draw() {
+          requestAnimationFrame(draw);
+          renderer.render(scene, camera);
         }
 
-         var ball = new THREE.SphereGeometry(10, 32, 32);
-         var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-         var ballMesh = new THREE.Mesh(ball, ballMaterial);
+       var i;
+
+       init();
+       draw();
+
+       document.getElementById('points').addEventListener('click', () => {
+         console.log("points");
+
+         fetch('/stats/points', { method: 'GET'})
+           .then(response => response.json())
+           .then(data => {
+             i = 2;
+             document.getElementById("playertext").innerHTML = '';
+             document.getElementById("pointtext").innerHTML = '';
+             balls[0].position.y = data[0][2]/60-420;
+             balls[1].position.y = data[1][2]/60-420;
+             balls[2].position.y = data[2][2]/60-420;
+             balls[3].position.y = data[3][2]/60-420;
+             balls[4].position.y = data[4][2]/60-420;
+             balls[5].position.y = data[5][2]/60-420;
+             balls[6].position.y = data[6][2]/60-420;
+             balls[7].position.y = data[7][2]/60-420;
+             balls[8].position.y = data[8][2]/60-420;
+             balls[9].position.y = data[9][2]/60-420;
+
+             disp(data);
+
+             });
+
+       });
+
+       document.getElementById('assists').addEventListener('click', () => {
+         console.log("assists");
+
+         fetch('/stats/assists', { method: 'GET'})
+           .then(response => response.json())
+           .then(data => {
+             i = 3;
+             document.getElementById("playertext").innerHTML = '';
+             document.getElementById("pointtext").innerHTML = '';
+             balls[0].position.y = data[0][3]/60-80;
+             balls[1].position.y = data[1][3]/60-80;
+             balls[2].position.y = data[2][3]/60-80;
+             balls[3].position.y = data[3][3]/60-80;
+             balls[4].position.y = data[4][3]/60-80;
+             balls[5].position.y = data[5][3]/60-80;
+             balls[6].position.y = data[6][3]/60-80;
+             balls[7].position.y = data[7][3]/60-80;
+             balls[8].position.y = data[8][3]/60-80;
+             balls[9].position.y = data[9][3]/60-80;
+
+             disp(data);
 
 
-         ballMesh.position.set(xpos - i*60.5, ypos, 0);
-         scene.add(ballMesh);
+             });
 
-         //renderer.render(scene, camera);
+       });
+
+       document.getElementById('rebounds').addEventListener('click',  () => {
+         console.log("rebounds");
+
+         fetch('/stats/rebounds', { method: 'GET'})
+           .then(response => response.json())
+           .then(data => {
+             i = 4;
+             document.getElementById("playertext").innerHTML = '';
+             document.getElementById("pointtext").innerHTML = '';
+             balls[0].position.y = data[0][4]/60-180;
+             balls[1].position.y = data[1][4]/60-180;
+             balls[2].position.y = data[2][4]/60-180;
+             balls[3].position.y = data[3][4]/60-180;
+             balls[4].position.y = data[4][4]/60-180;
+             balls[5].position.y = data[5][4]/60-180;
+             balls[6].position.y = data[6][4]/60-180;
+             balls[7].position.y = data[7][4]/60-180;
+             balls[8].position.y = data[8][4]/60-180;
+             balls[9].position.y = data[9][4]/60-180;
 
 
-        }
-     }
+             disp(data);
 
 
-        // balls
 
-   /*
-        fetch('/stats/points', { method: 'GET'})
-        .then(response => response.json())
-        .then(data => {
-          for (i = 0; i < data.length; i++){
-            ypos = data[i][2]/60-420;
 
-            var ball = new THREE.SphereGeometry(10, 32, 32);
-            var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-            var ballMesh = new THREE.Mesh(ball, ballMaterial);
+             });
 
-            ballMesh.position.set(xpos - i*60.5, ypos, 0);
-            scene.add(ballMesh);
-            console.log(ypos);
-           }
-           renderer.render(scene, camera);
-          });
-    */
-
-          // fetch('/stats/assists', { method: 'GET'})
-          // .then(response => response.json())
-          // .then(data => {
-          //   for (i = 0; i < data.length; i++){
-          //     ypos = data[i][3]/60-80;
-          //
-          //     var ball = new THREE.SphereGeometry(10, 32, 32);
-          //     var ballMaterial = new THREE.MeshLambertMaterial({color: 0xDD6600});
-          //     var ballMesh = new THREE.Mesh(ball, ballMaterial);
-          //
-          //     ballMesh.position.set(xpos - i*60.5, ypos, 0);
-          //     scene.add(ballMesh);
-          //     console.log(ypos);
-          //    }
-          //    renderer.render(scene, camera);
-          //   });
+       });
 
       function onWindowResize() {
 
@@ -327,55 +333,83 @@
       }
 
       function disp(data){
-      document.getElementById('rect9').addEventListener('mouseover', function rec(){
-        for (i = 0; i < data.length; i++){
+      document.getElementById('rect9').addEventListener('mouseover',() =>{
+
           console.log(data[0]);
-        }
+          document.getElementById("playertext").innerHTML = '#1 ' + data[0][1];
+          document.getElementById("pointtext").innerHTML = data[0][i];
+
       });
-      document.getElementById('rect8').addEventListener('mouseover', function rec(){
-        for (i = 0; i < data.length; i++){
+      document.getElementById('rect8').addEventListener('mouseover', function rec8(){
+
           console.log(data[1]);
-        }
+          document.getElementById("playertext").innerHTML = '#2 ' +data[1][1];
+          document.getElementById("pointtext").innerHTML = data[1][i];
+
+
       });
-      document.getElementById('rect7').addEventListener('mouseover', function rec(){
-        for (i = 0; i < data.length; i++){
+      document.getElementById('rect7').addEventListener('mouseover', function rec7(){
+
           console.log(data[2]);
-        }
+          document.getElementById("playertext").innerHTML = '#3 ' +data[2][1];
+          document.getElementById("pointtext").innerHTML = data[2][i];
+
       });
-      document.getElementById('rect6').addEventListener('mouseover', function rec(){
-        for (i = 0; i < data.length; i++){
+      document.getElementById('rect6').addEventListener('mouseover', function rec6(){
+
           console.log(data[3]);
-        }
+          document.getElementById("playertext").innerHTML = '#4 ' +data[3][1];
+          document.getElementById("pointtext").innerHTML = data[3][i];
+
       });
-      document.getElementById('rect5').addEventListener('mouseover', function rec(){
-        for (i = 0; i < data.length; i++){
+      document.getElementById('rect5').addEventListener('mouseover', function rec5(){
+
           console.log(data[4]);
-        }
+          document.getElementById("playertext").innerHTML = '#5 ' +data[4][1];
+          document.getElementById("pointtext").innerHTML = data[4][i];
+
+
       });
-      document.getElementById('rect4').addEventListener('mouseover', function rec(){
-        for (i = 0; i < data.length; i++){
+      document.getElementById('rect4').addEventListener('mouseover', function rec4(){
+
           console.log(data[5]);
-        }
+          document.getElementById("playertext").innerHTML = '#6 ' +data[5][1];
+          document.getElementById("pointtext").innerHTML = data[5][i];
+
+
       });
-      document.getElementById('rect3').addEventListener('mouseover', function rec(){
-        for (i = 0; i < data.length; i++){
+      document.getElementById('rect3').addEventListener('mouseover', function rec3(){
+
           console.log(data[6]);
-        }
+          document.getElementById("playertext").innerHTML = '#7 ' +data[6][1];
+          document.getElementById("pointtext").innerHTML = data[6][i];
+
+
+
       });
-      document.getElementById('rect2').addEventListener('mouseover', function rec(){
-        for (i = 0; i < data.length; i++){
+      document.getElementById('rect2').addEventListener('mouseover', function rec2(){
+
           console.log(data[7]);
-        }
+          document.getElementById("playertext").innerHTML = '#8 ' +data[7][1];
+          document.getElementById("pointtext").innerHTML = data[7][i];
+
+
       });
-      document.getElementById('rect1').addEventListener('mouseover', function rec(){
-        for (i = 0; i < data.length; i++){
+      document.getElementById('rect1').addEventListener('mouseover', function rec1(){
+
           console.log(data[8]);
-        }
+          document.getElementById("playertext").innerHTML = '#9 ' +data[8][1];
+          document.getElementById("pointtext").innerHTML = data[8][i];
+
+
       });
-      document.getElementById('rect0').addEventListener('mouseover', function rec(){
-        for (i = 0; i < data.length; i++){
+      document.getElementById('rect0').addEventListener('mouseover', function rec0(){
+
           console.log(data[9]);
-        }
+          document.getElementById("playertext").innerHTML = '#10 ' +data[9][1];
+          document.getElementById("pointtext").innerHTML = data[9][i];
+
+
       });
     }
 
