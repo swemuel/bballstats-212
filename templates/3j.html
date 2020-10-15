@@ -239,6 +239,7 @@
        var i;
 
        init();
+       window.addEventListener( 'resize', onWindowResize, false );
        draw();
 
        document.getElementById('points').addEventListener('click', () => {
